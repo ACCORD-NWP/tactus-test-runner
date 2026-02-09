@@ -497,7 +497,7 @@ def main(argv=None):
         action="store_false",
         dest="run",
         default=True,
-        help="Only run the modify generation setp",
+        help="Only run the modify generation step",
         required=False,
     )
 
