@@ -488,7 +488,7 @@ def main(argv=None):
         "-p",
         action="store_true",
         default=False,
-        help="Preare binaries from an IAL hash",
+        help="Prepare binaries from an IAL hash",
         required=False,
     )
 
