@@ -1,4 +1,4 @@
-"""Clean tatus test cases."""
+"""Clean tactus test cases."""
 
 import os
 
