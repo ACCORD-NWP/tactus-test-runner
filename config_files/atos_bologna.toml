@@ -1,4 +1,5 @@
 [general]
+  selection = [ ]
 
 [general.compiler.gnu_]
   active = true
@@ -7,9 +8,6 @@
 
 [general.compiler.intel_]
   active = true
-
-  # selection = [ ]
-  # tag = "v0_23_0_"
 
 [include]
   cases = "case_definitions.toml"

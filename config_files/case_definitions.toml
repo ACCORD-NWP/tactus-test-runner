@@ -29,6 +29,10 @@
 
 [cases.cy49t2_alaro]
 
+[cases.cy49t2_alaro.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
+
 [cases.cy49t2_alaro_ddh]
   base = "cy49t2_alaro"
   extra = ["deode/data/config_files/modifications/ddh.toml"]
@@ -76,6 +80,10 @@
 
 [cases.cy49t2_alaro_target]
   host = "cy49t2_alaro"
+
+[cases.cy49t2_alaro_target.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
 
 [cases.cy49t2_alaro_target.modifs.suite_control]
   mirror_host_case = true
@@ -138,6 +146,10 @@
 [cases.cy49t2_arome_R64]
   base = "cy49t2_arome"
 
+[cases.cy49t2_arome_R64.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
+
 [cases.cy49t2_arome_R64.modifs.submission]
   precision = "R64"
 
@@ -146,6 +158,10 @@
 
 [cases.cy49t2_arome_target]
   host = "cy49t2_arome_R64"
+
+[cases.cy49t2_arome_target.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
 
 [cases.cy49t2_arome_target.modifs.suite_control]
   mirror_host_case = true
@@ -228,6 +244,10 @@
 [cases.cy49t2_harmonie_arome_R64]
   base = "cy49t2_harmonie_arome"
 
+[cases.cy49t2_harmonie_arome_R64.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
+
 [cases.cy49t2_harmonie_arome_R64.modifs.submission]
   precision = "R64"
 
@@ -236,6 +256,10 @@
 
 [cases.cy49t2_harmonie_arome_target]
   host = "cy49t2_harmonie_arome_R64"
+
+[cases.cy49t2_harmonie_arome_target.modifs.general.times]
+  end = "2025-09-02T00:00:00Z"
+  start = "2025-09-02T00:00:00Z"
 
 [cases.cy49t2_harmonie_arome_target.modifs.suite_control]
   mirror_host_case = true

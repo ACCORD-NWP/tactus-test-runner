@@ -38,6 +38,7 @@ class TestCases:
 
         definitions = {"general": {}, "modifs": {}}
         if args.config_file is not None:
+            logger.info("Using config file: {}", args.config_file)
             self.config = ParsedConfig.from_file(args.config_file, json_schema={})
             try:
                 definitions = self.config.expand_macros().dict()
@@ -67,7 +68,6 @@ class TestCases:
                 if definitions["ial"].get("active", False):
                     self.expand_tests(definitions)
 
-        logger.info("Using config file: {}", args.config_file)
         logger.info(" tag: {}", self.tag)
         logger.info(" test_dir: {}", self.test_dir)
 
@@ -83,6 +83,7 @@ class TestCases:
         """
         if "tag" not in definitions["general"]:
             definitions["general"]["tag"] = self.get_tactus_version()
+            logger.info("tag not given but derived from git information")
         self.tag = definitions["general"].get("tag")
 
         if self.tag[0].isdigit():
