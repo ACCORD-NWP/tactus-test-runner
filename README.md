@@ -71,19 +71,30 @@ ttr -c config_files/CURRENT_HOST.toml -d
 
 ## Clean
 
-After successful runs and assesment the tested cases can be cleaned from disks and ecflow with e.g.
+After successful runs and assessment the tested cases can be cleaned from disks and ecflow with e.g.
 ```
 ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml
-```
-or 
-```
-ttr -c config_files/CURRENT_HOST.toml -r 
-```
-This will scan all config files and clean according to the settings in config_files/cleaning.toml. Note that cleaning of ECFS is not yet implemented.
 
-To just test the cleaning add `-d` i.e. a dry run
 ```
-ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml -d
+This will scan all config files and print what would have been cleanead according to the settings in config_files/remove.toml. I.e. you select the cases to remove by adding their config files after `-q`. To execute the actual cleaning type
+```
+ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml --execute-removal
+```
+
+Note that due to a bug in ecflow (server version <=5.15.2) configurations with mirror tasks for LAM -> LAM will not be cleaned but will make the server crash. The current, tedious, way to remove those is the following:
+
+- Checkpoint the ecFlow server through ecflow_ui
+
+- Stop the ecFlow server using: 
+
+```
+$ ssh $ECF_HOST sudo systemctl stop ecflow-server
+```
+
+- Edit the checkpoint file in /home/$USER/ecflow_server/$ECF_HOST.$ECF_PORT.ecf.check and, restart your ecFlow server using:
+
+```
+$ ssh $ECF_HOST sudo systemctl start ecflow-server
 ```
 
 ## Operational like testing

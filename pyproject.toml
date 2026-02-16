@@ -5,7 +5,7 @@
   name = "ttr"
   readme = "README.md"
   repository = "https://github.com/destination-earth-digital-twins/Tactus-test-runner"
-  version = "0.1.0"
+  version = "0.3.0"
 
 [tool.poetry.scripts]
   ttr = "ttr.src.ttr:main"
