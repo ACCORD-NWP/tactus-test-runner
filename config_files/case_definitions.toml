@@ -35,7 +35,7 @@
 
 [cases.cy49t2_alaro_ddh]
   base = "cy49t2_alaro"
-  extra = ["deode/data/config_files/modifications/ddh.toml"]
+  extra = ["tactus/data/config_files/modifications/ddh.toml"]
 
 [cases.cy49t2_alaro_ddh.modifs.system]
   case_suffix = "_ddh"
@@ -43,8 +43,8 @@
 [cases.cy49t2_alaro_eps]
   base = "cy49t2_alaro"
   extra = [
-    "deode/data/config_files/include/eps/eps_7members.toml",
-    "deode/data/config_files/include/eps/alaro.toml",
+    "tactus/data/config_files/include/eps/eps_7members.toml",
+    "tactus/data/config_files/include/eps/alaro.toml",
   ]
 
 [cases.cy49t2_alaro_eps.modifs.eps.general]
@@ -59,10 +59,10 @@
 
 [cases.cy49t2_alaro_operational]
   base = "cy49t2_alaro"
-  extra = ["deode/data/config_files/modifications/operational_settings.toml"]
+  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
 
 [cases.cy49t2_alaro_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/deode/@COMPILER@/"
+  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
 
 [cases.cy49t2_alaro_operational.modifs.extractsqlite]
   sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
@@ -76,14 +76,14 @@
 
 [cases.cy49t2_alaro_operational.modifs.system]
   case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/deode/@COMPILER@"
+  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
 
 [cases.cy49t2_alaro_operational_tomorrow]
   base = "cy49t2_alaro"
-  extra = ["deode/data/config_files/modifications/operational_settings.toml"]
+  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
 
 [cases.cy49t2_alaro_operational_tomorrow.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/deode/@COMPILER@/"
+  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
 
 [cases.cy49t2_alaro_operational_tomorrow.modifs.extractsqlite]
   sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
@@ -97,7 +97,7 @@
 
 [cases.cy49t2_alaro_operational_tomorrow.modifs.system]
   case_suffix = "_oper_tomorrow"
-  scratch_oper = "@SCRATCH@/DE_NWP/deode/@COMPILER@"
+  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
 
 [cases.cy49t2_alaro_target]
   host = "cy49t2_alaro"
@@ -113,7 +113,7 @@
 
 [cases.cy49t2_arome_ddh]
   base = "cy49t2_arome"
-  extra = ["deode/data/config_files/modifications/ddh.toml"]
+  extra = ["tactus/data/config_files/modifications/ddh.toml"]
 
 [cases.cy49t2_arome_ddh.modifs.system]
   case_suffix = "_ddh"
@@ -121,8 +121,8 @@
 [cases.cy49t2_arome_eps]
   base = "cy49t2_arome"
   extra = [
-    "deode/data/config_files/include/eps/eps_7members.toml",
-    "deode/data/config_files/include/eps/arome.toml",
+    "tactus/data/config_files/include/eps/eps_7members.toml",
+    "tactus/data/config_files/include/eps/arome.toml",
   ]
 
 [cases.cy49t2_arome_eps.modifs.eps.general]
@@ -137,7 +137,7 @@
 
 [cases.cy49t2_arome_flooding]
   base = "cy49t2_arome"
-  extra = ["deode/data/config_files/modifications/event_type/flooding.toml"]
+  extra = ["tactus/data/config_files/modifications/event_type/flooding.toml"]
 
 [cases.cy49t2_arome_flooding.modifs.general.times]
   end = "-P1D"
@@ -145,10 +145,10 @@
 
 [cases.cy49t2_arome_large_domain_operational]
   base = "arome"
-  extra = ["deode/data/config_files/modifications/operational_settings.toml"]
+  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
 
 [cases.cy49t2_arome_large_domain_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/deode/@COMPILER@/"
+  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
 
 [cases.cy49t2_arome_large_domain_operational.modifs.extractsqlite]
   sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
@@ -162,7 +162,7 @@
 
 [cases.cy49t2_arome_large_domain_operational.modifs.system]
   case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/deode/@COMPILER@"
+  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
 
 [cases.cy49t2_arome_R64]
   base = "cy49t2_arome"
@@ -189,7 +189,7 @@
 
 [cases.cy49t2_arome_use_offline]
   base = "cy49t2_arome"
-  extra = ["deode/data/config_files/modifications/use_surfex_offline_for_prep.toml"]
+  extra = ["tactus/data/config_files/modifications/use_surfex_offline_for_prep.toml"]
 
 [cases.cy49t2_arome_use_offline.modifs.general.times]
   end = "-P1D"
@@ -202,14 +202,14 @@
 
 [cases.cy49t2_harmonie_arome_airquality]
   base = "cy49t2_harmonie_arome"
-  extra = ["deode/data/config_files/modifications/event_type/airquality.toml"]
+  extra = ["tactus/data/config_files/modifications/event_type/airquality.toml"]
 
 [cases.cy49t2_harmonie_arome_airquality.modifs.archiving.FDB.fdb.surfex_grib2]
   active = false
 
 [cases.cy49t2_harmonie_arome_ddh]
   base = "cy49t2_harmonie_arome"
-  extra = ["deode/data/config_files/modifications/ddh.toml"]
+  extra = ["tactus/data/config_files/modifications/ddh.toml"]
 
 [cases.cy49t2_harmonie_arome_ddh.modifs.system]
   case_suffix = "_ddh"
@@ -217,8 +217,8 @@
 [cases.cy49t2_harmonie_arome_eps]
   base = "cy49t2_harmonie_arome"
   extra = [
-    "deode/data/config_files/include/eps/eps_7members.toml",
-    "deode/data/config_files/include/eps/harmonie_arome.toml",
+    "tactus/data/config_files/include/eps/eps_7members.toml",
+    "tactus/data/config_files/include/eps/harmonie_arome.toml",
   ]
 
 [cases.cy49t2_harmonie_arome_eps.modifs.eps.general]
@@ -233,7 +233,7 @@
 
 [cases.cy49t2_harmonie_arome_large_domain_use_offline]
   base = "harmonie_arome"
-  extra = ["deode/data/config_files/modifications/use_surfex_offline_for_prep.toml"]
+  extra = ["tactus/data/config_files/modifications/use_surfex_offline_for_prep.toml"]
 
 [cases.cy49t2_harmonie_arome_large_domain_use_offline.modifs.general.times]
   end = "-P1D"
@@ -244,10 +244,10 @@
 
 [cases.cy49t2_harmonie_arome_operational]
   base = "cy49t2_harmonie_arome"
-  extra = ["deode/data/config_files/modifications/operational_settings.toml"]
+  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
 
 [cases.cy49t2_harmonie_arome_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/deode/@COMPILER@/"
+  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
 
 [cases.cy49t2_harmonie_arome_operational.modifs.extractsqlite]
   sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
@@ -264,7 +264,7 @@
 
 [cases.cy49t2_harmonie_arome_operational.modifs.system]
   case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/deode/@COMPILER@"
+  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
 
 [cases.cy49t2_harmonie_arome_R64]
   base = "cy49t2_harmonie_arome"

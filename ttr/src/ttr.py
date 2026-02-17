@@ -9,14 +9,13 @@ from datetime import date
 from pathlib import Path
 
 import tomli
-from deode.__main__ import main as tactus_main
-from deode.commands_functions import remove_cases
-from deode.config_parser import ConfigPaths, GeneralConstants, ParsedConfig
-from deode.datetime_utils import as_datetime
-from deode.fullpos import flatten_list
-from deode.general_utils import merge_dicts
-from deode.host_actions import DeodeHost
-from deode.logs import logger
+from tactus.__main__ import main as tactus_main
+from tactus.config_parser import ConfigPaths, GeneralConstants, ParsedConfig
+from tactus.datetime_utils import as_datetime
+from tactus.fullpos import flatten_list
+from tactus.general_utils import merge_dicts
+from tactus.host_actions import TactusHost
+from tactus.logs import logger
 
 
 class TestCases:
@@ -33,7 +32,7 @@ class TestCases:
             0, os.path.join(os.getcwd(), "config_files")
         )
 
-        self.deode_host = DeodeHost().detect_deode_host()
+        self.tactus_host = TactusHost().detect_tactus_host()
 
         definitions = {"general": {}, "modifs": {}}
         if args.config_file is not None:
@@ -144,10 +143,10 @@ class TestCases:
         """Get tactus version info."""
         with open("pyproject.toml", "rb") as f:
             pyproject = tomli.load(f)
-            deode_git = pyproject["tool"]["poetry"]["dependencies"]["deode"]
+            tactus_git = pyproject["tool"]["poetry"]["dependencies"]["tactus"]
 
         try:
-            tag = next(deode_git[x] for x in ["tag", "branch", "rev"] if x in deode_git)
+            tag = next(tactus_git[x] for x in ["tag", "branch", "rev"] if x in tactus_git)
         except StopIteration:
             tag = "Unknown"
         for character in ["/",".","-"]:
@@ -335,8 +334,8 @@ class TestCases:
         files = glob.glob(f"{build_tar_path}/*{ial_hash}*.tar")
         for f in files:
             ff = os.path.basename(f).replace(".tar", "")
-            compiler = host_settings[self.deode_host]["compiler"]
-            precision = host_settings[self.deode_host]["precision"]
+            compiler = host_settings[self.tactus_host]["compiler"]
+            precision = host_settings[self.tactus_host]["precision"]
             if "-sp-" in ff:
                 precision = "R32"
             if "-gnu-" in ff:
@@ -544,7 +543,6 @@ def main(argv=None):
             remove_config = tomli.load(f)
         logger.info("Read cleaning rules from {}", remove_config_file)
         args.force_remove = remove_config["remove"].pop("force_remove", False)
-        remove_cases(args, remove_config)
 
     elif args.list:
         t.list()

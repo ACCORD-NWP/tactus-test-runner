@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 import tomlkit
-from deode.logs import logger
+from tactus.logs import logger
 
 from ttr.src import ttr
 from ttr.src.ttr import TestCases
@@ -77,7 +77,7 @@ def dump_toml(self):  # noqa ARG001
 @pytest.fixture()
 def _mockers(monkeypatch, session_mocker):
     monkeypatch.setattr(TestCases, "get_tactus_version", lambda self: "x_")  # noqa ARG001
-    session_mocker.patch("deode.__main__.main", new=dump_toml)
+    session_mocker.patch("tactus.__main__.main", new=dump_toml)
 
 
 # -------------------------------------------------------------
@@ -142,7 +142,7 @@ def test_get_tactus_version(monkeypatch, args, param):
         "tomli.load",
         lambda _: {
             "tool": {
-                "poetry": {"dependencies": {"deode": {param: f"{param}/testbranch"}}}
+                "poetry": {"dependencies": {"tactus": {param: f"{param}/testbranch"}}}
             }
         },
     )
@@ -210,7 +210,7 @@ def test_list(args):
 # -------------------------------------------------------------
 def test_get_binaries(args, tmp_test_data_dir):
     Path(f"{tmp_test_data_dir}/foo-sp--gnu-.tar").touch()
-    os.environ["DEODE_HOST"] = "atos_bologna"
+    os.environ["TACTUS_HOST"] = "atos_bologna"
     args.dry = True
     tc = TestCases(args)
     tc.ial = {
@@ -220,7 +220,7 @@ def test_get_binaries(args, tmp_test_data_dir):
     }
     tc.get_binaries()
     assert os.path.isdir(f"{tmp_test_data_dir}/foo/gnu/R32")
-    os.environ.pop("DEODE_HOST")
+    os.environ.pop("TACTUS_HOST")
 
 
 # -------------------------------------------------------------

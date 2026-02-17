@@ -3,7 +3,7 @@
     "cy49t2_arome_large_domain_operational",
     "cy49t2_harmonie_arome_operational",
   ]
-  extra = ["deode/data/config_files/modifications/operational_settings_lumi.toml"]
+  extra = ["tactus/data/config_files/modifications/operational_settings_lumi.toml"]
 
 [include]
   cases = "case_definitions.toml"
