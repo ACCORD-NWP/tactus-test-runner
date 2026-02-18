@@ -14,8 +14,14 @@
   R32 = ["cy49t2_arome", "cy49t2_harmonie_arome"]
   R64 = ["cy49t2_alaro", "cy49t2_arome", "cy49t2_harmonie_arome"]
 
+[gl]
+  active = true
+  build_tar_path = "/scratch/deployde330"
+  gl_hash = "5d8a7bbe181cb0d560652872ccaff16210e17778"
+  user_binary_path = "/scratch/@USER@/gl_binaries"
+
 [macros.case]
-  gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
+  gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"},{gl_hash = "gl.gl_hash"}, {gl_user_binary_path = "gl.user_binary_path"}]
   group_macros = []
   os_macros = ["USER"]
 
@@ -44,6 +50,7 @@
 
 [modifs.submission]
   max_ecf_tasks = 10
+
 
 [modifs.suite_control]
   create_static_data = true
