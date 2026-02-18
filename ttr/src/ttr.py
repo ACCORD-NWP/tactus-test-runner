@@ -164,7 +164,6 @@ class TestCases:
 
         """
         ial_hash = defs["ial"].get("ial_hash", "latest")
-        gl_hash = defs["gl"].get("gl_hash", "latest")
         prefix = f"hash_{ial_hash[0:7]}_"
         self.tag = prefix
 
@@ -408,7 +407,7 @@ class TestCases:
         }
         if self.gl.get("active", False):
             bin_modifs["submission"]["bindir_gl"]=f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
-        self.modifs=merge_dicts(self.modifs, bin_modifs, True)
+        self.modifs=merge_dicts( bin_modifs,self.modifs, True)
         
     def update_hostnames(self, hostnames):
         """Update host and domain name.
