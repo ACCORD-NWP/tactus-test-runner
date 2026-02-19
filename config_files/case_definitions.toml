@@ -135,6 +135,19 @@
 [cases.cy49t2_arome_eps.modifs.system]
   case_suffix = "_eps"
 
+[cases.cy49t2_arome_slaf]
+  base = "cy49t2_arome"
+  extra = [
+    "deode/data/config_files/include/eps/eps_members_slaf.toml",
+    "deode/data/config_files/include/eps/arome.toml",
+  ]
+
+[cases.cy49t2_arome_slaf.modifs.eps.general]
+  members = "0:3"
+
+[cases.cy49t2_arome_slaf.modifs.system]
+  case_suffix = "_slaf"
+
 [cases.cy49t2_arome_flooding]
   base = "cy49t2_arome"
   extra = ["deode/data/config_files/modifications/event_type/flooding.toml"]
