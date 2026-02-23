@@ -43,11 +43,7 @@
   ecf_out = "@PERM@/deode_ecflow/jobout"
 
 [modifs.submission]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/R64/bin"
   max_ecf_tasks = 10
-
-[modifs.submission.task_exceptions.Forecast]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/@PRECISION@/bin"
 
 [modifs.suite_control]
   create_static_data = true

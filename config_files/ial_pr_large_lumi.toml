@@ -31,11 +31,7 @@
   case_prefix = "@USER@_@TAG@@SUBTAG@"
 
 [modifs.submission]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/R64/bin"
   max_ecf_tasks = 10
-
-[modifs.submission.task_exceptions.Forecast]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/@PRECISION@/bin"
 
 [modifs.submission.task_exceptions.PgdFilterTownFrac.ENV]
   ECF_TRIES = 15

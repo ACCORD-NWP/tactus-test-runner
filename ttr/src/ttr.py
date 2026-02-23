@@ -60,13 +60,14 @@ class TestCases:
         self.modifs = definitions["modifs"]
         self.test_dir = definitions.get("test_dir", f"{self.tag}configs")
         self.ial = definitions.get("ial", {})
+        self.gl = definitions.get("gl", {})
         self.selection = self.resolve_selection(definitions)
 
         if args.config_file is not None:
             with contextlib.suppress(KeyError):
                 if definitions["ial"].get("active", False):
                     self.expand_tests(definitions)
-
+                    self.update_binary_paths()
         logger.info(" tag: {}", self.tag)
         logger.info(" test_dir: {}", self.test_dir)
 
@@ -356,8 +357,58 @@ class TestCases:
                 os.system(f"tar xf {f}")  # noqa S605
 
         os.chdir(basedir)
+        
+        if self.gl:
+            gl_hash = self.gl["gl_hash"]
+            build_tar_path = self.gl["build_tar_path"]
+
+            try:
+                _bindir = self.modifs["submission"]["bindir_gl"]
+            except KeyError:
+                _bindir = (
+                    f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+                )
+
+            files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
+            for f in files:
+                ff = os.path.basename(f).replace(".tar", "")
+                compiler = host_settings[self.deode_host]["compiler"]
+                if "-gnu-" in ff:
+                    compiler = "gnu"
+                cptag = ff.replace(gl_hash, "").replace("gl", "")
+                bindir = (
+                    _bindir.replace("@CPTAG@", cptag)
+                    .replace("@IAL_HASH@", gl_hash)
+                    .replace("@COMPILER@", compiler)
+                    .replace("/bin", "")
+                )
+                os.makedirs(bindir, exist_ok=True)
+                os.chdir(bindir)
+                logger.info("Untar {} into {}", f, bindir)
+                if not self.dry:
+                    os.system(f"tar xf {f}")  # noqa S605
+
+        
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
 
+    def update_binary_paths(self):
+        """update the correct binaries in the internal config object."""
+        ial_hash = self.ial.get("ial_hash", "latest")
+        gl_hash = self.gl.get("gl_hash", "latest")
+        bin_modifs={
+            "submission": {
+                "bindir"         : f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
+                "task_exception" : {
+                    "Forecast"   : {
+                        "bindir" : f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                    }
+                }
+            }
+        }
+        if self.gl.get("active", False):
+            bin_modifs["submission"]["bindir_gl"]=f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+        self.modifs=merge_dicts( bin_modifs,self.modifs, True)
+        
     def update_hostnames(self, hostnames):
         """Update host and domain name.
 
