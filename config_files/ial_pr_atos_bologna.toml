@@ -1,18 +1,24 @@
 [general]
+  selection = [
+    "cy49t2_alaro",
+    "cy49t2_arome",
+    "cy49t2_harmonie_arome",
+    "cy49t2_harmonie_arome_R64",
+    "cy49t2_arome_R64",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+
+[general.compiler.intel_]
+  active = true
 
 [ial]
   active = true
   build_tar_path = "/scratch/deployde330"
   ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
   user_binary_path = "/scratch/@USER@/ial_binaries"
-
-[ial.tests.gnu]
-  R32 = ["cy49t2_arome", "cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro", "cy49t2_arome", "cy49t2_harmonie_arome"]
-
-[ial.tests.intel]
-  R32 = ["cy49t2_arome", "cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro", "cy49t2_arome", "cy49t2_harmonie_arome"]
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -25,7 +31,7 @@
   os_macros = ["USER"]
 
 [modifs.general]
-  case = "@CASE_PREFIX@@COMPILER@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
+  case = "@CASE_PREFIX@@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
 
 [modifs.general.times]
   end = "2025-09-02T00:00:00Z"
@@ -51,3 +57,7 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
+
+
+[include]
+  cases = "case_definitions.toml"

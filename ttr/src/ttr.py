@@ -66,7 +66,6 @@ class TestCases:
         if args.config_file is not None:
             with contextlib.suppress(KeyError):
                 if definitions["ial"].get("active", False):
-                    self.expand_tests(definitions)
                     self.update_binary_paths()
         logger.info(" tag: {}", self.tag)
         logger.info(" test_dir: {}", self.test_dir)
@@ -156,32 +155,6 @@ class TestCases:
         tag += "_"
         return tag
 
-    def expand_tests(self, defs):
-        """Expand test arguments.
-
-        Arguments:
-           defs: (dict): Test definitions
-
-        """
-        ial_hash = defs["ial"].get("ial_hash", "latest")
-        prefix = f"hash_{ial_hash[0:7]}_"
-        self.tag = prefix
-
-        self.selection = []
-        for compiler, settings in defs["ial"]["tests"].items():
-            for precision, confs in settings.items():
-                for conf in confs:
-                    tag = f"{conf}_{compiler}_{precision}"
-                    self.selection.append(tag)
-                    self.cases[tag] = {
-                        "base": conf,
-                        "modifs": {
-                            "submission": {
-                                "precision": precision,
-                                "compiler": compiler,
-                            },
-                        },
-                    }
 
     def prepare(self):
         """Prepare the host cases.
@@ -236,7 +209,6 @@ class TestCases:
             subtag = item["subtag"] if "subtag" in item else ""
             host_case = item["hostname"] if "hostname" in item else ""
             host_domain = item["hostdomain"] if "hostdomain" in item else ""
-
             extra = list(self.extra) + (list(item["extra"]) if "extra" in item else [])
 
             # Merge and replace macros
@@ -394,6 +366,9 @@ class TestCases:
     def update_binary_paths(self):
         """update the correct binaries in the internal config object."""
         ial_hash = self.ial.get("ial_hash", "latest")
+        prefix = f"hash_{ial_hash[0:7]}_"
+        self.tag = prefix
+
         gl_hash = self.gl.get("gl_hash", "latest")
         bin_modifs={
             "submission": {
@@ -481,7 +456,6 @@ def execute(t, args):
     t.create(host_cases)
     hostnames = t.configure(config_hosts=True)
     t.update_hostnames(hostnames)
-
     # Create the modification files
     t.create()
 

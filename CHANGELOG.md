@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/destination-earth-digital-twins/Deode-Prototype/tree/HEAD)
 
+### Fixed
+- Fixed issue with gnu modifications in ial_pr runs  [\#23](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/23) (@pardallio)
+
 ### Added
 - added option to download gl binaries for testing with IAL PRs.
 - removed bindir modification from ial_pr config files, so that the download path is used by default

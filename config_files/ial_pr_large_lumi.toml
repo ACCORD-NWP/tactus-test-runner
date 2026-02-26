@@ -1,4 +1,16 @@
 [general]
+  selection = [
+    "alaro",
+    "arome",
+    "harmonie_arome",
+    "harmonie_arome_R64",
+    "arome_R64",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+
 
 [ial]
   active = true
@@ -6,9 +18,6 @@
   ial_hash = "31fce0c53135ccf2f0116b981d63c1676a189881"
   user_binary_path = "/scratch/project_465000527/@USER@/ial_binaries"
 
-[ial.tests.gnu]
-  R32 = ["arome", "harmonie_arome"]
-  R64 = ["alaro", "arome", "harmonie_arome"]
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -21,7 +30,7 @@
   os_macros = ["USER"]
 
 [modifs.general]
-  case = "@CASE_PREFIX@@COMPILER@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
+  case = "@CASE_PREFIX@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
 
 [modifs.general.times]
   end = "-P1D"
@@ -49,3 +58,6 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
+
+[include]
+  cases = "case_definitions.toml"
