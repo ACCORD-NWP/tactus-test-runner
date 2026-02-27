@@ -255,6 +255,15 @@
 [cases.cy49t2_harmonie_arome_airquality.modifs.archiving.FDB.fdb.surfex_grib2]
   active = false
 
+[cases.cy49t2_harmonie_arome_airquality.modifs.impact.aq.communicate.air_quality_general.common_api]
+  archive_in = "@ARCHIVE@/mockaq"
+
+[cases.cy49t2_harmonie_arome_airquality.modifs.impact.aq.StartImpactModels]
+  arguments = [
+    "dwaq case --config-file @ARCHIVE_ROOT@/config.toml ?@AQ_PATH@/dwaq/data/config_files/configurations/mock_aq_plugin @WRK@/aq.toml -e -o @WRK@/aq_config.toml --case-name @CASE@_AQ",
+    "deode start suite --config-file @WRK@/aq_config.toml -f @WRK@/aq.def",
+  ]
+
 [cases.cy49t2_harmonie_arome_ddh]
   base = "cy49t2_harmonie_arome"
   extra = ["deode/data/config_files/modifications/ddh.toml"]
