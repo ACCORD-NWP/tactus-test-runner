@@ -4,9 +4,11 @@ import contextlib
 import copy
 import glob
 import os
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
+
 
 import tomli
 from deode.__main__ import main as tactus_main
@@ -147,14 +149,23 @@ class TestCases:
             deode_git = pyproject["tool"]["poetry"]["dependencies"]["deode"]
 
         try:
-            tag = next(deode_git[x] for x in ["tag", "branch", "rev"] if x in deode_git)
+            if "branch" in deode_git:
+                cmd = f"git ls-remote {deode_git['git']} refs/heads/{deode_git['branch']}"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                tag = deode_git["branch"]
+                if result.stderr:
+                    logger.error(result.stderr)
+                else:
+                    hash = result.stdout.split("\t")[0][0:7]
+                    tag += f"_{hash}"
+            else:
+                tag = next(deode_git[x] for x in ["tag", "rev"] if x in deode_git)
         except StopIteration:
             tag = "Unknown"
-        for character in ["/",".","-"]:
+        for character in ["/", ".", "-"]:
             tag = tag.replace(character, "_")
         tag += "_"
         return tag
-
 
     def prepare(self):
         """Prepare the host cases.
@@ -329,7 +340,7 @@ class TestCases:
                 os.system(f"tar xf {f}")  # noqa S605
 
         os.chdir(basedir)
-        
+
         if self.gl:
             gl_hash = self.gl["gl_hash"]
             build_tar_path = self.gl["build_tar_path"]
@@ -337,9 +348,7 @@ class TestCases:
             try:
                 _bindir = self.modifs["submission"]["bindir_gl"]
             except KeyError:
-                _bindir = (
-                    f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
-                )
+                _bindir = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
 
             files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
             for f in files:
@@ -360,7 +369,6 @@ class TestCases:
                 if not self.dry:
                     os.system(f"tar xf {f}")  # noqa S605
 
-        
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
 
     def update_binary_paths(self):
@@ -370,20 +378,22 @@ class TestCases:
         self.tag = prefix
 
         gl_hash = self.gl.get("gl_hash", "latest")
-        bin_modifs={
+        bin_modifs = {
             "submission": {
-                "bindir"         : f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
-                "task_exception" : {
-                    "Forecast"   : {
-                        "bindir" : f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
+                "task_exception": {
+                    "Forecast": {
+                        "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
                     }
-                }
+                },
             }
         }
         if self.gl.get("active", False):
-            bin_modifs["submission"]["bindir_gl"]=f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
-        self.modifs=merge_dicts( bin_modifs,self.modifs, True)
-        
+            bin_modifs["submission"][
+                "bindir_gl"
+            ] = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+        self.modifs = merge_dicts(bin_modifs, self.modifs, True)
+
     def update_hostnames(self, hostnames):
         """Update host and domain name.
 
