@@ -181,7 +181,7 @@ This section is for IAL PR testing. Here we define
 - build_tar_path: Path to the tarball
 - user_binary_path: The target directory for the binaries
 
-In `ial.test.compiler_name` we define which tests to do in single and double precision respectively for each available compiler. We have
+We define which tests to do in single and double precision and which compilers are to be tested the same way it's done in the regular case:
 
 ```
 [ial]
@@ -189,12 +189,32 @@ In `ial.test.compiler_name` we define which tests to do in single and double pre
   ial_hash = "be0fe3c3429fcbdf4515f5b58a5cf30689cf66f8"
   build_tar_path = "/scratch/deployde330"
 
-[ial.tests.intel]
-  R32 = ["cy49t2_arome","cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro","cy49t2_arome","cy49t2_harmonie_arome"]
-[ial.tests.gnu]
-  R32 = ["cy49t2_arome","cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro","cy49t2_arome","cy49t2_harmonie_arome"]
+[general]
+  selection = [
+    "cy49t2_alaro",
+    "cy49t2_arome",
+    "cy49t2_harmonie_arome",
+    "cy49t2_harmonie_arome_R64",
+    "cy49t2_arome_R64",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+
+[general.compiler.intel_]
+  active = true
+
+```
+
+It is also possible to add custom gl tags for testing new gl binaries by adding a `gl` section:
+
+```
+[gl]
+  active = true
+  build_tar_path = "/scratch/deployde330"
+  gl_hash = "5d8a7bbe181cb0d560652872ccaff16210e17778"
+  user_binary_path = "/scratch/@USER@/gl_binaries"
 ```
 
 We can check what configurations to expect by
