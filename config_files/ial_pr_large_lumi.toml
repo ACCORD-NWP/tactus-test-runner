@@ -3,19 +3,16 @@
     "alaro",
     "arome",
     "harmonie_arome",
-    "harmonie_arome_R64",
-    "arome_R64",
   ]
 
 [general.compiler.gnu_]
   active = true
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 
 [ial]
   active = true
   build_tar_path = "/scratch/project_465000527/github-actions"
-  ial_hash = "31fce0c53135ccf2f0116b981d63c1676a189881"
+  ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
   user_binary_path = "/scratch/project_465000527/@USER@/ial_binaries"
 
 
@@ -30,7 +27,7 @@
   os_macros = ["USER"]
 
 [modifs.general]
-  case = "@CASE_PREFIX@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
+  case = "@CASE_PREFIX@@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
 
 [modifs.general.times]
   end = "-P1D"
