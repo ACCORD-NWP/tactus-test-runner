@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed issue with gnu modifications in ial_pr runs  [\#23](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/23) (@pardallio)
+- Fixed Lumi IAL- pr configuration file [\#25](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/25) (@pardallio)
 
 ## [0.3.0] - 2026-02-16
 
