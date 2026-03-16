@@ -1,14 +1,14 @@
 # Tactus-test-runner
 
-The Tactus-test-runner runs a number of configurations as defined in the used config file. 
+The Tactus-test-runner runs a number of configurations as defined in the used config file.
 
 We currently have the following config files under the directory config_files
 
  - atos_bologna.toml : Complete set of tests for atos_bologna
  - lumi[_large].toml : Complete set of tests for lumi for small or large domains
- - ial_pr_[large]_atos_bologna.toml : Test ia IAL pr on the toy/large domain
- - case_definitions.toml : Definition of all test cases 
- - macors.toml : Some macro definitions
+ - ial_pr_[large]_atos_bologna.toml : Test IAL PR on the toy/large domain
+ - case_definitions.toml : Definition of all test cases
+ - macros.toml : Some macro definitions
  - modifs_[atos_bologna|lumi].toml : Platform dependent config modifications
  - atos_bologna_ial_pr_example.toml : Example for running with a IAL PR
 
@@ -16,7 +16,7 @@ We currently have the following config files under the directory config_files
 
 Define the correct tactus version to use in pyproject.toml. This may be a tag, a branch or a local copy.
 
-- remote git dependency: 
+- remote git dependency:
 ```
 [tool.poetry.dependencies]
   deode = {git = "git@github.com:uandrae/Deode-Prototype.git", branch = "release/v0.24.0"}
@@ -66,7 +66,7 @@ ttr -c config_files/CURRENT_HOST.toml
 This will create a directory according to the tag and create all config files in this directory. For each config a tactus ecflow run will be launched. To only prepare config files without running tactus do:
 
 ```
-ttr -c config_files/CURRENT_HOST.toml -d 
+ttr -c config_files/CURRENT_HOST.toml -d
 ```
 
 ## Clean
@@ -85,7 +85,7 @@ Note that due to a bug in ecflow (server version <=5.15.2) configurations with m
 
 - Checkpoint the ecFlow server through ecflow_ui
 
-- Stop the ecFlow server using: 
+- Stop the ecFlow server using:
 
 ```
 $ ssh $ECF_HOST sudo systemctl stop ecflow-server
@@ -99,7 +99,7 @@ $ ssh $ECF_HOST sudo systemctl start ecflow-server
 
 ## Operational like testing
 
-Operational like testing is done with the config files [lumi|atos_bologna]_operational.toml. To test the full chain these tests should be done using the development user accounts on atos and lumi respectively. 
+Operational like testing is done with the config files [lumi|atos_bologna]_operational.toml. To test the full chain these tests should be done using the development user accounts on atos and lumi respectively.
 
 ## About the config files
 
@@ -128,12 +128,12 @@ To test different compilers we can add the compiler section. Here we define the 
 
 ```
 
-To rerun the tests with the same dates as those used when testing prior to tagging set the reference date as 
+To rerun the tests with the same dates as those used when testing prior to tagging set the reference date as
 ```
 [general]
    reference_date  = "YYYY-MM-DD"
 ```
-on atos and 
+on atos and
 ```
 [modifs.general.times]
    end = "YYYY-MM-DDT00:00:00Z"
@@ -258,7 +258,7 @@ $ poetry run ttr -c config_files/ial_pr_atos_bologna.toml -p
 ```
 Finally we can launch the runs by
 ```
-$ poetry run ttr -c config_files/ial_pr_atos_bologna.toml 
+$ poetry run ttr -c config_files/ial_pr_atos_bologna.toml
 ```
 Note the corresponding config file `config_files/ial_pr_large_atos_bologna.toml` for large domain tests.
 
