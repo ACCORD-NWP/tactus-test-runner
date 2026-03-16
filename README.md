@@ -6,7 +6,7 @@ We currently have the following config files under the directory config_files
 
  - atos_bologna.toml : Complete set of tests for atos_bologna
  - lumi[_large].toml : Complete set of tests for lumi for small or large domains
- - ial_pr_[large]_atos_bologna.toml : Test IAL PRon the toy/large domain
+ - ial_pr_[large]_atos_bologna.toml : Test IAL PR on the toy/large domain
  - case_definitions.toml : Definition of all test cases
  - macros.toml : Some macro definitions
  - modifs_[atos_bologna|lumi].toml : Platform dependent config modifications
