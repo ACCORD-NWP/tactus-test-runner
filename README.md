@@ -71,19 +71,30 @@ ttr -c config_files/CURRENT_HOST.toml -d
 
 ## Clean
 
-After successful runs and assesment the tested cases can be cleaned from disks and ecflow with e.g.
+After successful runs and assessment the tested cases can be cleaned from disks and ecflow with e.g.
 ```
 ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml
-```
-or 
-```
-ttr -c config_files/CURRENT_HOST.toml -r 
-```
-This will scan all config files and clean according to the settings in config_files/cleaning.toml. Note that cleaning of ECFS is not yet implemented.
 
-To just test the cleaning add `-d` i.e. a dry run
 ```
-ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml -d
+This will scan all config files and print what would have been cleanead according to the settings in config_files/remove.toml. I.e. you select the cases to remove by adding their config files after `-q`. To execute the actual cleaning type
+```
+ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml --execute-removal
+```
+
+Note that due to a bug in ecflow (server version <=5.15.2) configurations with mirror tasks for LAM -> LAM will not be cleaned but will make the server crash. The current, tedious, way to remove those is the following:
+
+- Checkpoint the ecFlow server through ecflow_ui
+
+- Stop the ecFlow server using: 
+
+```
+$ ssh $ECF_HOST sudo systemctl stop ecflow-server
+```
+
+- Edit the checkpoint file in /home/$USER/ecflow_server/$ECF_HOST.$ECF_PORT.ecf.check and, restart your ecFlow server using:
+
+```
+$ ssh $ECF_HOST sudo systemctl start ecflow-server
 ```
 
 ## Operational like testing
@@ -170,7 +181,7 @@ This section is for IAL PR testing. Here we define
 - build_tar_path: Path to the tarball
 - user_binary_path: The target directory for the binaries
 
-In `ial.test.compiler_name` we define which tests to do in single and double precision respectively for each available compiler. We have
+We define which tests to do in single and double precision and which compilers are to be tested the same way it's done in the regular case:
 
 ```
 [ial]
@@ -178,12 +189,32 @@ In `ial.test.compiler_name` we define which tests to do in single and double pre
   ial_hash = "be0fe3c3429fcbdf4515f5b58a5cf30689cf66f8"
   build_tar_path = "/scratch/deployde330"
 
-[ial.tests.intel]
-  R32 = ["cy49t2_arome","cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro","cy49t2_arome","cy49t2_harmonie_arome"]
-[ial.tests.gnu]
-  R32 = ["cy49t2_arome","cy49t2_harmonie_arome"]
-  R64 = ["cy49t2_alaro","cy49t2_arome","cy49t2_harmonie_arome"]
+[general]
+  selection = [
+    "cy49t2_alaro",
+    "cy49t2_arome",
+    "cy49t2_harmonie_arome",
+    "cy49t2_harmonie_arome_R64",
+    "cy49t2_arome_R64",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+
+[general.compiler.intel_]
+  active = true
+
+```
+
+It is also possible to add custom gl tags for testing new gl binaries by adding a `gl` section:
+
+```
+[gl]
+  active = true
+  build_tar_path = "/scratch/deployde330"
+  gl_hash = "5d8a7bbe181cb0d560652872ccaff16210e17778"
+  user_binary_path = "/scratch/@USER@/gl_binaries"
 ```
 
 We can check what configurations to expect by

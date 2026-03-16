@@ -1,14 +1,20 @@
 [general]
+  selection = [
+    "alaro",
+    "arome",
+    "harmonie_arome",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+
 
 [ial]
   active = true
   build_tar_path = "/scratch/project_465000527/github-actions"
-  ial_hash = "31fce0c53135ccf2f0116b981d63c1676a189881"
+  ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
   user_binary_path = "/scratch/project_465000527/@USER@/ial_binaries"
 
-[ial.tests.gnu]
-  R32 = ["arome", "harmonie_arome"]
-  R64 = ["alaro", "arome", "harmonie_arome"]
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -21,7 +27,7 @@
   os_macros = ["USER"]
 
 [modifs.general]
-  case = "@CASE_PREFIX@@COMPILER@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
+  case = "@CASE_PREFIX@@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
 
 [modifs.general.times]
   end = "-P1D"
@@ -31,11 +37,7 @@
   case_prefix = "@USER@_@TAG@@SUBTAG@"
 
 [modifs.submission]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/R64/bin"
   max_ecf_tasks = 10
-
-[modifs.submission.task_exceptions.Forecast]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/@PRECISION@/bin"
 
 [modifs.submission.task_exceptions.PgdFilterTownFrac.ENV]
   ECF_TRIES = 15
@@ -53,3 +55,6 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
+
+[include]
+  cases = "case_definitions.toml"

@@ -4,20 +4,21 @@ import contextlib
 import copy
 import glob
 import os
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
 
+
 import tomli
 from deode.__main__ import main as tactus_main
+from deode.commands_functions import remove_cases
 from deode.config_parser import ConfigPaths, GeneralConstants, ParsedConfig
 from deode.datetime_utils import as_datetime
 from deode.fullpos import flatten_list
 from deode.general_utils import merge_dicts
 from deode.host_actions import DeodeHost
 from deode.logs import logger
-
-from ttr.src.cleaning import remove_ttr_cases
 
 
 class TestCases:
@@ -38,6 +39,7 @@ class TestCases:
 
         definitions = {"general": {}, "modifs": {}}
         if args.config_file is not None:
+            logger.info("Using config file: {}", args.config_file)
             self.config = ParsedConfig.from_file(args.config_file, json_schema={})
             try:
                 definitions = self.config.expand_macros().dict()
@@ -60,14 +62,13 @@ class TestCases:
         self.modifs = definitions["modifs"]
         self.test_dir = definitions.get("test_dir", f"{self.tag}configs")
         self.ial = definitions.get("ial", {})
+        self.gl = definitions.get("gl", {})
         self.selection = self.resolve_selection(definitions)
 
         if args.config_file is not None:
             with contextlib.suppress(KeyError):
                 if definitions["ial"].get("active", False):
-                    self.expand_tests(definitions)
-
-        logger.info("Using config file: {}", args.config_file)
+                    self.update_binary_paths()
         logger.info(" tag: {}", self.tag)
         logger.info(" test_dir: {}", self.test_dir)
 
@@ -83,6 +84,7 @@ class TestCases:
         """
         if "tag" not in definitions["general"]:
             definitions["general"]["tag"] = self.get_tactus_version()
+            logger.info("tag not given but derived from git information")
         self.tag = definitions["general"].get("tag")
 
         if self.tag[0].isdigit():
@@ -97,7 +99,10 @@ class TestCases:
         Returns:
             selection (list) : List of selected configurations
         """
-        selection = definitions["general"].get("selection", list(self.cases))
+        selection = definitions["general"].get("selection", [])
+        if len(selection) == 0:
+            logger.info("Selection is empty, include all cases")
+            selection = list(self.cases)
 
         # Handle subtags and update selection accordingly
         with contextlib.suppress(KeyError):
@@ -120,7 +125,6 @@ class TestCases:
                     for k in value.get("extra", []):
                         x["extra"].append(k)
                     subtag_selection.append(subtag)
-                    logger.info(x)
                     self.cases[subtag] = x
             if len(subtag_selection) > 0:
                 selection = subtag_selection
@@ -133,8 +137,7 @@ class TestCases:
         for x in self.cases:
             logger.info("    {}", x)
         logger.info("Selected cases:")
-        case_print = self.cases if len(self.selection) == 0 else self.selection
-        for x in case_print:
+        for x in self.selection:
             logger.info("    {}", x)
             if self.verbose:
                 logger.info("      {}", self.cases[x])
@@ -146,39 +149,23 @@ class TestCases:
             deode_git = pyproject["tool"]["poetry"]["dependencies"]["deode"]
 
         try:
-            tag = next(deode_git[x] for x in ["tag", "branch", "rev"] if x in deode_git)
+            if "branch" in deode_git:
+                cmd = f"git ls-remote {deode_git['git']} refs/heads/{deode_git['branch']}"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                tag = deode_git["branch"]
+                if result.stderr:
+                    logger.error(result.stderr)
+                else:
+                    hash = result.stdout.split("\t")[0][0:7]
+                    tag += f"_{hash}"
+            else:
+                tag = next(deode_git[x] for x in ["tag", "rev"] if x in deode_git)
         except StopIteration:
             tag = "Unknown"
-
-        tag = tag.replace("/", "_").replace(".", "_") + "_"
+        for character in ["/", ".", "-"]:
+            tag = tag.replace(character, "_")
+        tag += "_"
         return tag
-
-    def expand_tests(self, defs):
-        """Expand test arguments.
-
-        Arguments:
-           defs: (dict): Test definitions
-
-        """
-        ial_hash = defs["ial"].get("ial_hash", "latest")
-        prefix = f"hash_{ial_hash[0:7]}_"
-        self.tag = prefix
-
-        self.selection = []
-        for compiler, settings in defs["ial"]["tests"].items():
-            for precision, confs in settings.items():
-                for conf in confs:
-                    tag = f"{conf}_{compiler}_{precision}"
-                    self.selection.append(tag)
-                    self.cases[tag] = {
-                        "base": conf,
-                        "modifs": {
-                            "submission": {
-                                "precision": precision,
-                                "compiler": compiler,
-                            },
-                        },
-                    }
 
     def prepare(self):
         """Prepare the host cases.
@@ -233,7 +220,6 @@ class TestCases:
             subtag = item["subtag"] if "subtag" in item else ""
             host_case = item["hostname"] if "hostname" in item else ""
             host_domain = item["hostdomain"] if "hostdomain" in item else ""
-
             extra = list(self.extra) + (list(item["extra"]) if "extra" in item else [])
 
             # Merge and replace macros
@@ -354,7 +340,59 @@ class TestCases:
                 os.system(f"tar xf {f}")  # noqa S605
 
         os.chdir(basedir)
+
+        if self.gl:
+            gl_hash = self.gl["gl_hash"]
+            build_tar_path = self.gl["build_tar_path"]
+
+            try:
+                _bindir = self.modifs["submission"]["bindir_gl"]
+            except KeyError:
+                _bindir = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+
+            files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
+            for f in files:
+                ff = os.path.basename(f).replace(".tar", "")
+                compiler = host_settings[self.deode_host]["compiler"]
+                if "-gnu-" in ff:
+                    compiler = "gnu"
+                cptag = ff.replace(gl_hash, "").replace("gl", "")
+                bindir = (
+                    _bindir.replace("@CPTAG@", cptag)
+                    .replace("@IAL_HASH@", gl_hash)
+                    .replace("@COMPILER@", compiler)
+                    .replace("/bin", "")
+                )
+                os.makedirs(bindir, exist_ok=True)
+                os.chdir(bindir)
+                logger.info("Untar {} into {}", f, bindir)
+                if not self.dry:
+                    os.system(f"tar xf {f}")  # noqa S605
+
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
+
+    def update_binary_paths(self):
+        """update the correct binaries in the internal config object."""
+        ial_hash = self.ial.get("ial_hash", "latest")
+        prefix = f"hash_{ial_hash[0:7]}_"
+        self.tag = prefix
+
+        gl_hash = self.gl.get("gl_hash", "latest")
+        bin_modifs = {
+            "submission": {
+                "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
+                "task_exception": {
+                    "Forecast": {
+                        "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                    }
+                },
+            }
+        }
+        if self.gl.get("active", False):
+            bin_modifs["submission"][
+                "bindir_gl"
+            ] = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+        self.modifs = merge_dicts(bin_modifs, self.modifs, True)
 
     def update_hostnames(self, hostnames):
         """Update host and domain name.
@@ -428,7 +466,6 @@ def execute(t, args):
     t.create(host_cases)
     hostnames = t.configure(config_hosts=True)
     t.update_hostnames(hostnames)
-
     # Create the modification files
     t.create()
 
@@ -465,7 +502,14 @@ def main(argv=None):
         "-d",
         action="store_true",
         default=False,
-        help="List selected cases",
+        help="Do not execute the actual action (tactus case, cleaning, ...) only prepare",
+        required=False,
+    )
+    parser.add_argument(
+        "--execute-removal",
+        action="store_true",
+        default=False,
+        help="Preform the cleaning. Only works with '--remove' and overrides '--dry'",
         required=False,
     )
     parser.add_argument(
@@ -516,6 +560,7 @@ def main(argv=None):
 
     if args.prepare_binaries:
         t.get_binaries()
+
     elif args.remove:
         if args.remove_search_path is not None:
             files = args.remove_search_path
@@ -527,9 +572,18 @@ def main(argv=None):
             ]
         else:
             files = []
-        remove_ttr_cases(files, dry_run=args.dry)
+        args.config_files = files
+        args.dry_run = args.dry
+        remove_config_file = "config_files/remove.toml"
+        with open(remove_config_file, "rb") as f:
+            remove_config = tomli.load(f)
+        logger.info("Read cleaning rules from {}", remove_config_file)
+        args.force_remove = remove_config["remove"].pop("force_remove", False)
+        remove_cases(args, remove_config)
+
     elif args.list:
         t.list()
+
     elif args.config_file is not None:
         execute(t, args)
 

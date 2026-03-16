@@ -1,4 +1,18 @@
 [general]
+  selection = [
+    "alaro",
+    "arome",
+    "harmonie_arome",
+    "harmonie_arome_R64",
+    "arome_R64",
+  ]
+
+[general.compiler.gnu_]
+  active = true
+  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+
+[general.compiler.intel_]
+  active = true
 
 [ial]
   active = true
@@ -6,13 +20,6 @@
   ial_hash = "2951f1a1dc2df82471e857a3331df8bb35050745"
   user_binary_path = "/scratch/@USER@/ial_binaries"
 
-[ial.tests.gnu]
-  R32 = ["arome", "harmonie_arome"]
-  R64 = ["alaro", "arome", "harmonie_arome"]
-
-[ial.tests.intel]
-  R32 = ["arome", "harmonie_arome"]
-  R64 = ["alaro", "arome", "harmonie_arome"]
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -25,7 +32,7 @@
   os_macros = ["USER"]
 
 [modifs.general]
-  case = "@CASE_PREFIX@@COMPILER@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
+  case = "@CASE_PREFIX@_@PRECISION@_@CYCLE@_@CSC@_@DOMAIN@_@YMD_START@"
 
 [modifs.general.times]
   end = "2025-09-02T00:00:00Z"
@@ -43,11 +50,7 @@
   ecf_out = "@PERM@/deode_ecflow/jobout"
 
 [modifs.submission]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/R64/bin"
   max_ecf_tasks = 10
-
-[modifs.submission.task_exceptions.Forecast]
-  bindir = "@USER_BINARY_PATH@/@IAL_HASH@/@COMPILER@/@PRECISION@/bin"
 
 [modifs.suite_control]
   create_static_data = true
@@ -55,3 +58,7 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
+
+
+[include]
+  cases = "case_definitions.toml"

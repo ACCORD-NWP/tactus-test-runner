@@ -1,15 +1,13 @@
 [general]
+  selection = [ ]
 
 [general.compiler.gnu_]
   active = true
-  exclude = ["cy48t3", "cy46h"]
+  exclude = ["cy48t3", "cy46h", "airquality"]
   extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
   active = true
-
-  # selection = [ ]
-  # tag = "v0_23_0_"
 
 [include]
   cases = "case_definitions.toml"
