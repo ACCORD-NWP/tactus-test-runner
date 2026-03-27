@@ -310,7 +310,7 @@ class TestCases:
         ial_hash = self.ial["ial_hash"]
         build_tar_path = self.ial["build_tar_path"]
         try:
-            _bindir = self.modifs["submission"]["task_exception"]["Forecast"]["bindir"]
+            _bindir = self.modifs["submission"]["task_exceptions"]["Forecast"]["bindir"]
         except KeyError:
             _bindir = (
                 f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
@@ -381,7 +381,7 @@ class TestCases:
         bin_modifs = {
             "submission": {
                 "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
-                "task_exception": {
+                "task_exceptions": {
                     "Forecast": {
                         "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
                     }
