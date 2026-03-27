@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - removed bindir modification from ial_pr config files, so that the download path is used by default
 
 ### Fixed
+- Correct erroneous config reference causing wrong binaries to be used in case of IAL pr testing[\#23](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/30) (@uandrae)
 - Fixed issue with gnu modifications in ial_pr runs  [\#23](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/23) (@pardallio)
 - Fixed Lumi IAL- pr configuration file [\#25](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/25) (@pardallio)
 - Fixed atos IAL- pr-large configuration file [\#29](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/29) (@pardallio)
