@@ -1,5 +1,6 @@
 [general]
   selection = [
+    "cy49t2_alaro_operational",
     "cy49t2_arome_large_domain_operational",
     "cy49t2_harmonie_arome_operational",
   ]

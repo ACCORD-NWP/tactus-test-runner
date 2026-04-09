@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added option to download gl binaries for testing with IAL PRs.
 - removed bindir modification from ial_pr config files, so that the download path is used by default
 
+### Changed
+- Make selections explicit [\#39](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/39) (@uandrae)
+
 ### Fixed
 - switch off mirror of globalDT on LUMI [\#35] (https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/35)
 - Correct erroneous config reference causing wrong binaries to be used in case of IAL pr testing[\#23](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/30) (@uandrae)

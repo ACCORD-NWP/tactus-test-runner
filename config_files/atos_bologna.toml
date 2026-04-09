@@ -1,9 +1,35 @@
 [general]
-  selection = [ ]
+  selection = [
+    "alaro",
+    "arome",
+    "cy49t2_alaro",
+    "cy49t2_alaro_ddh",
+    "cy49t2_alaro_eps",
+    "cy49t2_alaro_mode_start",
+    "cy49t2_alaro_target",
+    "cy49t2_arome",
+    "cy49t2_arome_ddh",
+    "cy49t2_arome_eps",
+    "cy49t2_arome_slaf",
+    "cy49t2_arome_flooding",
+    "cy49t2_arome_mode_start",
+    "cy49t2_arome_R64",
+    "cy49t2_arome_target",
+    "cy49t2_arome_use_offline",
+    "cy49t2_harmonie_arome",
+    "cy49t2_harmonie_arome_airquality",
+    "cy49t2_harmonie_arome_ddh",
+    "cy49t2_harmonie_arome_eps",
+    "cy49t2_harmonie_arome_large_domain_use_offline",
+    "cy49t2_harmonie_arome_mode_start",
+    "cy49t2_harmonie_arome_R64",
+    "cy49t2_harmonie_arome_target",
+    "harmonie_arome",
+  ]
 
 [general.compiler.gnu_]
   active = true
-  exclude = ["cy48t3", "cy46h", "airquality"]
+  exclude = ["airquality"]
   extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
