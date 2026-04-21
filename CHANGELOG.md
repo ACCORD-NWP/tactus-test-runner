@@ -14,10 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add commit hash to an automatic tag derived from a branch. [\#24](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/24) (@uandrae)
 - added option to download gl binaries for testing with IAL PRs.
 - removed bindir modification from ial_pr config files, so that the download path is used by default
-- Add *_configs in .gitignor [\38](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/38) (@dhaumont)
+- Add *_configs in .gitignore [\38](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/38) (@dhaumont)
 
 ### Changed
 - Make selections explicit [\#39](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/39) (@uandrae)
+- Change the save_as method after ParsedConfig refactoring [\#31](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/31/) (@dhaumont)
 
 ### Fixed
 - switch off mirror of globalDT on LUMI [\#35] (https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/35)

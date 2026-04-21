@@ -13,7 +13,7 @@ from pathlib import Path
 import tomli
 from deode.__main__ import main as tactus_main
 from deode.commands_functions import remove_cases
-from deode.config_parser import ConfigPaths, GeneralConstants, ParsedConfig
+from deode.config_parser import ConfigPaths, GeneralConstants, ParsedConfig, BasicConfig
 from deode.datetime_utils import as_datetime
 from deode.fullpos import flatten_list
 from deode.general_utils import merge_dicts
@@ -242,7 +242,8 @@ class TestCases:
             # Save the modifications
             outfile = f"{self.test_dir}/modifs_{case}.toml"
             logger.info(" create: {}", outfile)
-            config["modifs"].save_as(outfile)
+            config = config.dict()
+            BasicConfig.save_dictionary_as(config["modifs"],outfile)
 
             # Build the command to execute
             cmd = [
