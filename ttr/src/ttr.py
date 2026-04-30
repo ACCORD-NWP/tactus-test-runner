@@ -10,10 +10,9 @@ import sys
 from datetime import date
 from pathlib import Path
 
-
 import tomli
 from tactus.__main__ import main as tactus_main
-from tactus.config_parser import ConfigPaths, GeneralConstants, ParsedConfig, BasicConfig
+from tactus.config_parser import BasicConfig, ConfigPaths, GeneralConstants, ParsedConfig
 from tactus.datetime_utils import as_datetime
 from tactus.fullpos import flatten_list
 from tactus.general_utils import merge_dicts
@@ -153,13 +152,15 @@ class TestCases:
                 cmd = (
                     f"git ls-remote {tactus_git['git']} refs/heads/{tactus_git['branch']}"
                 )
-                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                result = subprocess.run(
+                    cmd, shell=True, capture_output=True, text=True, check=False
+                )
                 tag = tactus_git["branch"]
                 if result.stderr:
                     logger.error(result.stderr)
                 else:
-                    hash = result.stdout.split("\t")[0][0:7]
-                    tag += f"_{hash}"
+                    hash_ = result.stdout.split("\t")[0][0:7]
+                    tag += f"_{hash_}"
             else:
                 tag = next(tactus_git[x] for x in ["tag", "rev"] if x in tactus_git)
         except StopIteration:
@@ -356,7 +357,7 @@ class TestCases:
             files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
             for f in files:
                 ff = os.path.basename(f).replace(".tar", "")
-                compiler = host_settings[self.deode_host]["compiler"]
+                compiler = host_settings[self.tactus_host]["compiler"]
                 if "-gnu-" in ff:
                     compiler = "gnu"
                 cptag = ff.replace(gl_hash, "").replace("gl", "")
@@ -375,7 +376,7 @@ class TestCases:
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
 
     def update_binary_paths(self):
-        """update the correct binaries in the internal config object."""
+        """Update the correct binaries in the internal config object."""
         ial_hash = self.ial.get("ial_hash", "latest")
         prefix = f"hash_{ial_hash[0:7]}_"
         self.tag = prefix
@@ -386,7 +387,10 @@ class TestCases:
                 "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
                 "task_exceptions": {
                     "Forecast": {
-                        "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                        "bindir": (
+                            f"{self.ial['user_binary_path']}/{ial_hash}/"
+                            "@COMPILER@/@PRECISION@/bin"
+                        )
                     }
                 },
             }

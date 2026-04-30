@@ -1,13 +1,14 @@
 [general]
-  selection = [
-    "alaro",
-    "arome",
-    "harmonie_arome",
-  ]
+  selection = ["alaro", "arome", "harmonie_arome"]
 
 [general.compiler.gnu_]
   active = true
 
+[gl]
+  active = true
+  build_tar_path = "/scratch/project_465000527/github-actions"
+  gl_hash = "53a4b71143e3b0abb2a288c69110e8740d4d08a8"
+  user_binary_path = "/scratch/project_465000527/@USER@/gl_binaries"
 
 [ial]
   active = true
@@ -15,12 +16,8 @@
   ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
   user_binary_path = "/scratch/project_465000527/@USER@/ial_binaries"
 
-
-[gl]
-  active = true
-  build_tar_path = "/scratch/project_465000527/github-actions"
-  gl_hash = "53a4b71143e3b0abb2a288c69110e8740d4d08a8"
-  user_binary_path = "/scratch/project_465000527/@USER@/gl_binaries"
+[include]
+  cases = "case_definitions.toml"
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -61,6 +58,3 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
-
-[include]
-  cases = "case_definitions.toml"

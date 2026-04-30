@@ -9,7 +9,7 @@
 
 [general.compiler.gnu_]
   active = true
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+  extra = ["tactus/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
   active = true
@@ -20,6 +20,8 @@
   ial_hash = "2951f1a1dc2df82471e857a3331df8bb35050745"
   user_binary_path = "/scratch/@USER@/ial_binaries"
 
+[include]
+  cases = "case_definitions.toml"
 
 [macros.case]
   gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"}]
@@ -58,7 +60,3 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
-
-
-[include]
-  cases = "case_definitions.toml"

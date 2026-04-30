@@ -77,48 +77,6 @@
 [cases.cy49t2_alaro_mode_start.modifs.system]
   case_suffix = "_mode_start"
 
-[cases.cy49t2_alaro_operational]
-  base = "cy49t2_alaro"
-  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
-
-[cases.cy49t2_alaro_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
-
-[cases.cy49t2_alaro_operational.modifs.extractsqlite]
-  sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
-
-[cases.cy49t2_alaro_operational.modifs.general]
-  event_type = "nwp"
-
-[cases.cy49t2_alaro_operational.modifs.general.times]
-  end = "-P2D"
-  start = "-P2D"
-
-[cases.cy49t2_alaro_operational.modifs.system]
-  case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
-
-[cases.cy49t2_alaro_operational_tomorrow]
-  base = "cy49t2_alaro"
-  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
-
-[cases.cy49t2_alaro_operational_tomorrow.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
-
-[cases.cy49t2_alaro_operational_tomorrow.modifs.extractsqlite]
-  sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
-
-[cases.cy49t2_alaro_operational_tomorrow.modifs.general]
-  event_type = "nwp"
-
-[cases.cy49t2_alaro_operational_tomorrow.modifs.general.times]
-  end = "P1D"
-  start = "P1D"
-
-[cases.cy49t2_alaro_operational_tomorrow.modifs.system]
-  case_suffix = "_oper_tomorrow"
-  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
-
 [cases.cy49t2_alaro_target]
   host = "cy49t2_alaro"
 
@@ -155,48 +113,6 @@
 [cases.cy49t2_arome_eps.modifs.system]
   case_suffix = "_eps"
 
-[cases.cy49t2_arome_slaf]
-  base = "cy49t2_arome"
-  extra = [
-    "deode/data/config_files/include/eps/eps_members_slaf.toml",
-    "deode/data/config_files/include/eps/arome.toml",
-  ]
-
-[cases.cy49t2_arome_slaf.modifs.eps.general]
-  members = "0:3"
-
-[cases.cy49t2_arome_slaf.modifs.system]
-  case_suffix = "_slaf"
-
-[cases.cy49t2_arome_flooding]
-  base = "cy49t2_arome"
-  extra = ["tactus/data/config_files/modifications/event_type/flooding.toml"]
-
-[cases.cy49t2_arome_flooding.modifs.general.times]
-  end = "-P1D"
-  start = "-P1D"
-
-[cases.cy49t2_arome_large_domain_operational]
-  base = "arome"
-  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
-
-[cases.cy49t2_arome_large_domain_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
-
-[cases.cy49t2_arome_large_domain_operational.modifs.extractsqlite]
-  sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
-
-[cases.cy49t2_arome_large_domain_operational.modifs.general]
-  event_type = "nwp"
-
-[cases.cy49t2_arome_large_domain_operational.modifs.general.times]
-  end = "-P1D"
-  start = "-P1D"
-
-[cases.cy49t2_arome_large_domain_operational.modifs.system]
-  case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
-
 [cases.cy49t2_arome_mode_start]
   base = "cy49t2_arome"
 
@@ -225,6 +141,19 @@
 [cases.cy49t2_arome_R64.modifs.system]
   case_suffix = "_R64"
 
+[cases.cy49t2_arome_slaf]
+  base = "cy49t2_arome"
+  extra = [
+    "tactus/data/config_files/include/eps/eps_members_slaf.toml",
+    "tactus/data/config_files/include/eps/arome.toml",
+  ]
+
+[cases.cy49t2_arome_slaf.modifs.eps.general]
+  members = "0:3"
+
+[cases.cy49t2_arome_slaf.modifs.system]
+  case_suffix = "_slaf"
+
 [cases.cy49t2_arome_target]
   host = "cy49t2_arome_R64"
 
@@ -247,22 +176,6 @@
   case_suffix = "_use_offline"
 
 [cases.cy49t2_harmonie_arome]
-
-[cases.cy49t2_harmonie_arome_airquality]
-  base = "cy49t2_harmonie_arome"
-  extra = ["tactus/data/config_files/modifications/event_type/airquality.toml"]
-
-[cases.cy49t2_harmonie_arome_airquality.modifs.archiving.FDB.fdb.surfex_grib2]
-  active = false
-
-[cases.cy49t2_harmonie_arome_airquality.modifs.impact.aq.communicate.air_quality_general.common_api]
-  archive_in = "@ARCHIVE@/mockaq"
-
-[cases.cy49t2_harmonie_arome_airquality.modifs.impact.aq.StartImpactModels]
-  arguments = [
-    "dwaq case --config-file @ARCHIVE_ROOT@/config.toml ?@AQ_PATH@/dwaq/data/config_files/configurations/mock_aq_plugin @WRK@/aq.toml -e -o @WRK@/aq_config.toml --case-name @CASE@_AQ",
-    "deode start suite --config-file @WRK@/aq_config.toml -f @WRK@/aq.def",
-  ]
 
 [cases.cy49t2_harmonie_arome_ddh]
   base = "cy49t2_harmonie_arome"
@@ -313,30 +226,6 @@
 
 [cases.cy49t2_harmonie_arome_mode_start.modifs.system]
   case_suffix = "_mode_start"
-
-[cases.cy49t2_harmonie_arome_operational]
-  base = "cy49t2_harmonie_arome"
-  extra = ["tactus/data/config_files/modifications/operational_settings.toml"]
-
-[cases.cy49t2_harmonie_arome_operational.modifs.archiving.prefix]
-  ecfs = "ec:/@USER@/DE_NWP/tactus/@COMPILER@/"
-
-[cases.cy49t2_harmonie_arome_operational.modifs.extractsqlite]
-  sqlite_path = "@CASEDIR@/sqlite/@SQLITE_MODEL_NAME@/FCTABLE"
-
-[cases.cy49t2_harmonie_arome_operational.modifs.general]
-  event_type = "nwp"
-
-[cases.cy49t2_harmonie_arome_operational.modifs.general.times]
-  end = "-P3D"
-  start = "-P3D"
-
-[cases.cy49t2_harmonie_arome_operational.modifs.suite_control]
-  do_archiving = true
-
-[cases.cy49t2_harmonie_arome_operational.modifs.system]
-  case_suffix = "_oper"
-  scratch_oper = "@SCRATCH@/DE_NWP/tactus/@COMPILER@"
 
 [cases.cy49t2_harmonie_arome_R64]
   base = "cy49t2_harmonie_arome"
