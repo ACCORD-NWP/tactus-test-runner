@@ -1,16 +1,19 @@
 """Tactus-test-runner main driver."""
+
 import argparse
 import contextlib
 import copy
 import glob
 import os
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
 
+
 import tomli
 from tactus.__main__ import main as tactus_main
-from tactus.config_parser import ConfigPaths, GeneralConstants, ParsedConfig
+from tactus.config_parser import ConfigPaths, GeneralConstants, ParsedConfig, BasicConfig
 from tactus.datetime_utils import as_datetime
 from tactus.fullpos import flatten_list
 from tactus.general_utils import merge_dicts
@@ -59,13 +62,13 @@ class TestCases:
         self.modifs = definitions["modifs"]
         self.test_dir = definitions.get("test_dir", f"{self.tag}configs")
         self.ial = definitions.get("ial", {})
+        self.gl = definitions.get("gl", {})
         self.selection = self.resolve_selection(definitions)
 
         if args.config_file is not None:
             with contextlib.suppress(KeyError):
                 if definitions["ial"].get("active", False):
-                    self.expand_tests(definitions)
-
+                    self.update_binary_paths()
         logger.info(" tag: {}", self.tag)
         logger.info(" test_dir: {}", self.test_dir)
 
@@ -146,40 +149,25 @@ class TestCases:
             tactus_git = pyproject["tool"]["poetry"]["dependencies"]["tactus"]
 
         try:
-            tag = next(tactus_git[x] for x in ["tag", "branch", "rev"] if x in tactus_git)
+            if "branch" in tactus_git:
+                cmd = (
+                    f"git ls-remote {tactus_git['git']} refs/heads/{tactus_git['branch']}"
+                )
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                tag = tactus_git["branch"]
+                if result.stderr:
+                    logger.error(result.stderr)
+                else:
+                    hash = result.stdout.split("\t")[0][0:7]
+                    tag += f"_{hash}"
+            else:
+                tag = next(tactus_git[x] for x in ["tag", "rev"] if x in tactus_git)
         except StopIteration:
             tag = "Unknown"
-        for character in ["/",".","-"]:
+        for character in ["/", ".", "-"]:
             tag = tag.replace(character, "_")
         tag += "_"
         return tag
-
-    def expand_tests(self, defs):
-        """Expand test arguments.
-
-        Arguments:
-           defs: (dict): Test definitions
-
-        """
-        ial_hash = defs["ial"].get("ial_hash", "latest")
-        prefix = f"hash_{ial_hash[0:7]}_"
-        self.tag = prefix
-
-        self.selection = []
-        for compiler, settings in defs["ial"]["tests"].items():
-            for precision, confs in settings.items():
-                for conf in confs:
-                    tag = f"{conf}_{compiler}_{precision}"
-                    self.selection.append(tag)
-                    self.cases[tag] = {
-                        "base": conf,
-                        "modifs": {
-                            "submission": {
-                                "precision": precision,
-                                "compiler": compiler,
-                            },
-                        },
-                    }
 
     def prepare(self):
         """Prepare the host cases.
@@ -234,7 +222,6 @@ class TestCases:
             subtag = item["subtag"] if "subtag" in item else ""
             host_case = item["hostname"] if "hostname" in item else ""
             host_domain = item["hostdomain"] if "hostdomain" in item else ""
-
             extra = list(self.extra) + (list(item["extra"]) if "extra" in item else [])
 
             # Merge and replace macros
@@ -257,7 +244,8 @@ class TestCases:
             # Save the modifications
             outfile = f"{self.test_dir}/modifs_{case}.toml"
             logger.info(" create: {}", outfile)
-            config["modifs"].save_as(outfile)
+            config = config.dict()
+            BasicConfig.save_dictionary_as(config["modifs"], outfile)
 
             # Build the command to execute
             cmd = [
@@ -325,7 +313,7 @@ class TestCases:
         ial_hash = self.ial["ial_hash"]
         build_tar_path = self.ial["build_tar_path"]
         try:
-            _bindir = self.modifs["submission"]["task_exception"]["Forecast"]["bindir"]
+            _bindir = self.modifs["submission"]["task_exceptions"]["Forecast"]["bindir"]
         except KeyError:
             _bindir = (
                 f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
@@ -355,7 +343,59 @@ class TestCases:
                 os.system(f"tar xf {f}")  # noqa S605
 
         os.chdir(basedir)
+
+        if self.gl:
+            gl_hash = self.gl["gl_hash"]
+            build_tar_path = self.gl["build_tar_path"]
+
+            try:
+                _bindir = self.modifs["submission"]["bindir_gl"]
+            except KeyError:
+                _bindir = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+
+            files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
+            for f in files:
+                ff = os.path.basename(f).replace(".tar", "")
+                compiler = host_settings[self.deode_host]["compiler"]
+                if "-gnu-" in ff:
+                    compiler = "gnu"
+                cptag = ff.replace(gl_hash, "").replace("gl", "")
+                bindir = (
+                    _bindir.replace("@CPTAG@", cptag)
+                    .replace("@IAL_HASH@", gl_hash)
+                    .replace("@COMPILER@", compiler)
+                    .replace("/bin", "")
+                )
+                os.makedirs(bindir, exist_ok=True)
+                os.chdir(bindir)
+                logger.info("Untar {} into {}", f, bindir)
+                if not self.dry:
+                    os.system(f"tar xf {f}")  # noqa S605
+
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
+
+    def update_binary_paths(self):
+        """update the correct binaries in the internal config object."""
+        ial_hash = self.ial.get("ial_hash", "latest")
+        prefix = f"hash_{ial_hash[0:7]}_"
+        self.tag = prefix
+
+        gl_hash = self.gl.get("gl_hash", "latest")
+        bin_modifs = {
+            "submission": {
+                "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
+                "task_exceptions": {
+                    "Forecast": {
+                        "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                    }
+                },
+            }
+        }
+        if self.gl.get("active", False):
+            bin_modifs["submission"][
+                "bindir_gl"
+            ] = f"{self.gl['user_binary_path']}/{gl_hash}/@COMPILER@/bin"
+        self.modifs = merge_dicts(bin_modifs, self.modifs, True)
 
     def update_hostnames(self, hostnames):
         """Update host and domain name.
@@ -429,7 +469,6 @@ def execute(t, args):
     t.create(host_cases)
     hostnames = t.configure(config_hosts=True)
     t.update_hostnames(hostnames)
-
     # Create the modification files
     t.create()
 
@@ -496,7 +535,7 @@ def main(argv=None):
         "-p",
         action="store_true",
         default=False,
-        help="Preare binaries from an IAL hash",
+        help="Prepare binaries from an IAL hash",
         required=False,
     )
 
@@ -505,7 +544,7 @@ def main(argv=None):
         action="store_false",
         dest="run",
         default=True,
-        help="Only run the modify generation setp",
+        help="Only run the modify generation step",
         required=False,
     )
 

@@ -30,6 +30,7 @@
 
 [modifs.suite_control]
   max_static_data_tasks = -1
+  mirror_globalDT = false
 
 [modifs.system]
   case_suffix = ""
