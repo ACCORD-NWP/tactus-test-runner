@@ -245,7 +245,7 @@ class TestCases:
             # Save the modifications
             outfile = f"{self.test_dir}/modifs_{case}.toml"
             logger.info(" create: {}", outfile)
-            BasicConfig.save_as(config["modifs"], outfile)
+            BasicConfig(config["modifs"]).save_as(outfile)
 
             # Build the command to execute
             cmd = [
