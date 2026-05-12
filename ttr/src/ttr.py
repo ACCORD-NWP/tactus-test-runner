@@ -1,4 +1,5 @@
 """Tactus-test-runner main driver."""
+
 import argparse
 import contextlib
 import copy
@@ -9,16 +10,14 @@ import sys
 from datetime import date
 from pathlib import Path
 
-
 import tomli
-from deode.__main__ import main as tactus_main
-from deode.commands_functions import remove_cases
-from deode.config_parser import ConfigPaths, GeneralConstants, ParsedConfig, BasicConfig
-from deode.datetime_utils import as_datetime
-from deode.fullpos import flatten_list
-from deode.general_utils import merge_dicts
-from deode.host_actions import DeodeHost
-from deode.logs import logger
+from tactus.__main__ import main as tactus_main
+from tactus.config_parser import BasicConfig, ConfigPaths, GeneralConstants, ParsedConfig
+from tactus.datetime_utils import as_datetime
+from tactus.fullpos import flatten_list
+from tactus.general_utils import merge_dicts
+from tactus.host_actions import TactusHost
+from tactus.logs import logger
 
 
 class TestCases:
@@ -35,7 +34,7 @@ class TestCases:
             0, os.path.join(os.getcwd(), "config_files")
         )
 
-        self.deode_host = DeodeHost().detect_deode_host()
+        self.tactus_host = TactusHost().detect_tactus_host()
 
         definitions = {"general": {}, "modifs": {}}
         if args.config_file is not None:
@@ -146,20 +145,24 @@ class TestCases:
         """Get tactus version info."""
         with open("pyproject.toml", "rb") as f:
             pyproject = tomli.load(f)
-            deode_git = pyproject["tool"]["poetry"]["dependencies"]["deode"]
+            tactus_git = pyproject["tool"]["poetry"]["dependencies"]["tactus"]
 
         try:
-            if "branch" in deode_git:
-                cmd = f"git ls-remote {deode_git['git']} refs/heads/{deode_git['branch']}"
-                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-                tag = deode_git["branch"]
+            if "branch" in tactus_git:
+                cmd = (
+                    f"git ls-remote {tactus_git['git']} refs/heads/{tactus_git['branch']}"
+                )
+                result = subprocess.run(
+                    cmd, shell=True, capture_output=True, text=True, check=False
+                )
+                tag = tactus_git["branch"]
                 if result.stderr:
                     logger.error(result.stderr)
                 else:
-                    hash = result.stdout.split("\t")[0][0:7]
-                    tag += f"_{hash}"
+                    hash_ = result.stdout.split("\t")[0][0:7]
+                    tag += f"_{hash_}"
             else:
-                tag = next(deode_git[x] for x in ["tag", "rev"] if x in deode_git)
+                tag = next(tactus_git[x] for x in ["tag", "rev"] if x in tactus_git)
         except StopIteration:
             tag = "Unknown"
         for character in ["/", ".", "-"]:
@@ -242,8 +245,7 @@ class TestCases:
             # Save the modifications
             outfile = f"{self.test_dir}/modifs_{case}.toml"
             logger.info(" create: {}", outfile)
-            config = config.dict()
-            BasicConfig.save_dictionary_as(config["modifs"],outfile)
+            BasicConfig(config["modifs"]).save_as(outfile)
 
             # Build the command to execute
             cmd = [
@@ -320,8 +322,8 @@ class TestCases:
         files = glob.glob(f"{build_tar_path}/*{ial_hash}*.tar")
         for f in files:
             ff = os.path.basename(f).replace(".tar", "")
-            compiler = host_settings[self.deode_host]["compiler"]
-            precision = host_settings[self.deode_host]["precision"]
+            compiler = host_settings[self.tactus_host]["compiler"]
+            precision = host_settings[self.tactus_host]["precision"]
             if "-sp-" in ff:
                 precision = "R32"
             if "-gnu-" in ff:
@@ -354,7 +356,7 @@ class TestCases:
             files = glob.glob(f"{build_tar_path}/*{gl_hash}*.tar")
             for f in files:
                 ff = os.path.basename(f).replace(".tar", "")
-                compiler = host_settings[self.deode_host]["compiler"]
+                compiler = host_settings[self.tactus_host]["compiler"]
                 if "-gnu-" in ff:
                     compiler = "gnu"
                 cptag = ff.replace(gl_hash, "").replace("gl", "")
@@ -373,7 +375,7 @@ class TestCases:
         logger.info("All binaries copied. Rerun without '-p' to launch tests")
 
     def update_binary_paths(self):
-        """update the correct binaries in the internal config object."""
+        """Update the correct binaries in the internal config object."""
         ial_hash = self.ial.get("ial_hash", "latest")
         prefix = f"hash_{ial_hash[0:7]}_"
         self.tag = prefix
@@ -384,7 +386,10 @@ class TestCases:
                 "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/R64/bin",
                 "task_exceptions": {
                     "Forecast": {
-                        "bindir": f"{self.ial['user_binary_path']}/{ial_hash}/@COMPILER@/@PRECISION@/bin"
+                        "bindir": (
+                            f"{self.ial['user_binary_path']}/{ial_hash}/"
+                            "@COMPILER@/@PRECISION@/bin"
+                        )
                     }
                 },
             }
@@ -580,7 +585,6 @@ def main(argv=None):
             remove_config = tomli.load(f)
         logger.info("Read cleaning rules from {}", remove_config_file)
         args.force_remove = remove_config["remove"].pop("force_remove", False)
-        remove_cases(args, remove_config)
 
     elif args.list:
         t.list()
