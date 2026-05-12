@@ -19,16 +19,16 @@ Define the correct tactus version to use in pyproject.toml. This may be a tag, a
 - remote git dependency:
 ```
 [tool.poetry.dependencies]
-  deode = {git = "git@github.com:uandrae/Deode-Prototype.git", branch = "release/v0.24.0"}
+  tactus = {git = "https://github.com/ACCORD-NWP/tactus.git", branch = "develop"}
 ```
 
 - local repository dependency:
 ```
 [tool.poetry.dependencies]
-  deode = {path = "/path/to/local/Deode/repo" }
+  tactus = {path = "/path/to/local/tactus/repo" }
 ```
 
-After updating the deode dependency make sure to run `poetry update` to let poetry install the correct one
+After updating the tactus dependency make sure to run `poetry update` to let poetry install the correct one
 
 Optionally define the location of your virtual environment in poetry.toml
 
@@ -73,12 +73,12 @@ ttr -c config_files/CURRENT_HOST.toml -d
 
 After successful runs and assessment the tested cases can be cleaned from disks and ecflow with e.g.
 ```
-ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml
+ttr -r -q /scratch/$USER/tactus/your_test_tag_*/archive/config.toml
 
 ```
 This will scan all config files and print what would have been cleanead according to the settings in config_files/remove.toml. I.e. you select the cases to remove by adding their config files after `-q`. To execute the actual cleaning type
 ```
-ttr -r -q /scratch/$USER/deode/your_test_tag_*/archive/config.toml --execute-removal
+ttr -r -q /scratch/$USER/tactus/your_test_tag_*/archive/config.toml --execute-removal
 ```
 
 Note that due to a bug in ecflow (server version <=5.15.2) configurations with mirror tasks for LAM -> LAM will not be cleaned but will make the server crash. The current, tedious, way to remove those is the following:
@@ -124,7 +124,7 @@ To test different compilers we can add the compiler section. Here we define the 
 [general.compiler.gnu_]
   active = true
   exclude = ["cy48t2", "cy46h"]
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+  extra = ["tactus/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 ```
 
@@ -155,8 +155,8 @@ Here we define the config settings per case.
   host = "alaro"
   base = "cy49t2_alaro"
   extra = [
-    "deode/data/config_files/include/eps/eps_7members.toml",
-    "deode/data/config_files/include/eps/alaro.toml",
+    "tactus/data/config_files/include/eps/eps_7members.toml",
+    "tactus/data/config_files/include/eps/alaro.toml",
   ]
 
 [cases.cy49t2_alaro_eps.modifs.eps.general]
@@ -200,7 +200,7 @@ We define which tests to do in single and double precision and which compilers a
 
 [general.compiler.gnu_]
   active = true
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+  extra = ["tactus/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
   active = true

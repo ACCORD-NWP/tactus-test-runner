@@ -30,7 +30,7 @@
 [general.compiler.gnu_]
   active = true
   exclude = ["airquality"]
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+  extra = ["tactus/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
   active = true

@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[Full Changelog](https://github.com/destination-earth-digital-twins/Deode-Prototype/compare/...HEAD)
+[Full Changelog](https://github.com/ACCORD-NWP/tactus-test-runner/compare/...HEAD)
 
 
-## [Unreleased](https://github.com/destination-earth-digital-twins/Deode-Prototype/tree/HEAD)
+## [Unreleased](https://github.com/ACCORD-NWP/tactus-test-runner/tree/HEAD)
 
 ### Added
 - Add commit hash to an automatic tag derived from a branch. [\#24](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/24) (@uandrae)
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Make selections explicit [\#39](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/39) (@uandrae)
 - Change the save_as method after ParsedConfig refactoring [\#31](https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/31/) (@dhaumont)
+- Use ACCORD tactus and ACCORDIFY scripts [\#1](https://github.com/ACCORD-NWP/tactus-test-runner/pull/1) (@mfroelund)
 
 ### Fixed
 - switch off mirror of globalDT on LUMI [\#35] (https://github.com/destination-earth-digital-twins/Tactus-test-runner/pull/35)

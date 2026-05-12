@@ -9,17 +9,10 @@
 
 [general.compiler.gnu_]
   active = true
-  extra = ["deode/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
+  extra = ["tactus/data/config_files/modifications/submission/atos_bologna_gnu.toml"]
 
 [general.compiler.intel_]
   active = true
-
-[ial]
-  active = true
-  build_tar_path = "/scratch/deployde330"
-  ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
-  user_binary_path = "/scratch/@USER@/ial_binaries"
-
 
 [gl]
   active = true
@@ -27,8 +20,22 @@
   gl_hash = "5d8a7bbe181cb0d560652872ccaff16210e17778"
   user_binary_path = "/scratch/@USER@/gl_binaries"
 
+[ial]
+  active = true
+  build_tar_path = "/scratch/deployde330"
+  ial_hash = "597fe49222c84a40298322ad3e343cb7da71fa3d"
+  user_binary_path = "/scratch/@USER@/ial_binaries"
+
+[include]
+  cases = "case_definitions.toml"
+
 [macros.case]
-  gen_macros = [{ial_hash = "ial.ial_hash"}, {user_binary_path = "ial.user_binary_path"},{gl_hash = "gl.gl_hash"}, {gl_user_binary_path = "gl.user_binary_path"}]
+  gen_macros = [
+    {ial_hash = "ial.ial_hash"},
+    {user_binary_path = "ial.user_binary_path"},
+    {gl_hash = "gl.gl_hash"},
+    {gl_user_binary_path = "gl.user_binary_path"},
+  ]
   group_macros = []
   os_macros = ["USER"]
 
@@ -49,15 +56,14 @@
 
 [modifs.scheduler.ecfvars]
   case_prefix = "@TAG@@SUBTAG@"
-  ecf_files = "@PERM@/deode_ecflow/ecf_files"
-  ecf_files_remotely = "@PERM@/deode_ecflow/ecf_files"
-  ecf_home = "@PERM@/deode_ecflow/jobout"
-  ecf_jobout = "@PERM@/deode_ecflow/jobout"
-  ecf_out = "@PERM@/deode_ecflow/jobout"
+  ecf_files = "@PERM@/tactus_ecflow/ecf_files"
+  ecf_files_remotely = "@PERM@/tactus_ecflow/ecf_files"
+  ecf_home = "@PERM@/tactus_ecflow/jobout"
+  ecf_jobout = "@PERM@/tactus_ecflow/jobout"
+  ecf_out = "@PERM@/tactus_ecflow/jobout"
 
 [modifs.submission]
   max_ecf_tasks = 10
-
 
 [modifs.suite_control]
   create_static_data = true
@@ -65,7 +71,3 @@
   do_creategrib_static = false
   do_extractsqlite = false
   do_mergesqlite = false
-
-
-[include]
-  cases = "case_definitions.toml"
