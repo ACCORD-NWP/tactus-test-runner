@@ -5,6 +5,7 @@
     "cy49t2_alaro_eps",
     "cy49t2_alaro_mode_start",
     "cy49t2_alaro_target",
+    "cy50t2_alaro",
     "cy49t2_arome",
     "cy49t2_arome_ddh",
     "cy49t2_arome_eps",
@@ -12,12 +13,14 @@
     "cy49t2_arome_mode_start",
     "cy49t2_arome_R64",
     "cy49t2_arome_target",
+    "cy50t2_arome",
     "cy49t2_harmonie_arome",
     "cy49t2_harmonie_arome_ddh",
     "cy49t2_harmonie_arome_eps",
     "cy49t2_harmonie_arome_mode_start",
     "cy49t2_harmonie_arome_R64",
     "cy49t2_harmonie_arome_target",
+    "cy50t2_harmonie_arome",
   ]
 
 [general.compiler.gnu_]
